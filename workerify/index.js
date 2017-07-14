@@ -7,24 +7,30 @@ const add = (d) => {
     return a + b
 }
 
-const mockEvent = (d) => ({data:d})
-
-const postMessagify = (func) => {
+function postMessagify(func) {
     const baseFunc = function (e) {
         const res = func(e.data)
         return this.postMessage(res)
     }
-
     return baseFunc
 }
 
+function workerify(func) {
+    const PMd = postMessagify(func)
+    const blob = new Blob(
+        [`const func = ${func.toString()}
+        onmessage = ${PMd.toString()}`],
+        {type:"text/javascript"}
+    )
+    return new Worker(URL.createObjectURL(blob))
+}
 //------
 
 
 function handleSubmit() {
     const a = $cache.a.value;
     const b = $cache.b.value;
-    $cache.postMessagifiedAdd.call($cache.workerListener, mockEvent([a, b]))
+    $cache.worker.postMessage([a, b])
 }
 
 function printMessage(d) {
@@ -39,38 +45,21 @@ const handleWorkerMessage = new Proxy(printMessage, {
 
 //------
 
-function testBlob() {
-    const blob = new Blob(
-        ["I'm a blob"],
-        {type:"text/plain"}
-    )
-    const blobReader = new FileReader()
-    blobReader.addEventListener('loadend', () => {
-        $cache.workerListener.postMessage(blobReader.result)
-    })
-    blobReader.readAsText(blob)
-}
-
-//------
-
 function initCache() {
     $cache.a = document.getElementById('a')
     $cache.b = document.getElementById('b')
     $cache.submit = document.getElementById('submit')
     $cache.result = document.getElementById('result')
-    $cache.feedbackListener = document.getElementById('worker-listener')
-    $cache.workerListener = new Worker('workerListener.js')
-    $cache.postMessagifiedAdd = postMessagify(add)
+    $cache.worker = workerify(add)
 }
 
 function initEvents() {
     $cache.submit.addEventListener('click', handleSubmit)
-    $cache.workerListener.onmessage = handleWorkerMessage
+    $cache.worker.onmessage = handleWorkerMessage
 }
 function init() {
     initCache()
     initEvents()
-    testBlob()
 }
 
 window.onload = init

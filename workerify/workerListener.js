@@ -1,1 +1,0 @@
-self.onmessage = (e) => postMessage(`workerListener here, I just received : "${e.data}"`)

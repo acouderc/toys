@@ -1,6 +1,6 @@
-# Workerify - Step 2
+# Workerify - Step 3
 
-We're now working on transforming any simple function to one sending its result via ``postMessage``, using an higher-order function.
+In the third step, we generate a real worker from our function using the File API.
 
 ## Usage
 
@@ -11,10 +11,12 @@ Browsers usually don't allow web pages to load local content (unless you explici
 
 Then open a local page on ``http://localhost:8000/``.
 
-## State at step 2
+## State at step 3
 
-![receiving result from workerListener](images/postmessagify.png)
+![our generated blob](images/blobworker.png)
 
- Since we already used a Proxy, this time we use a decorator function to return the postMessage. We created ``mockEvent`` to wrap our input into an object similar to the expected input of a worker. Finally, to test that our postMessagified function effectively sends something, we created a new worker ``workerListener`` that simply returns what it is sent.
+ We'll now use the powerful File API to automatically generate our worker. For this, we'll use ``Function.prototype.toString`` and a ``Blob``. If you're not familiar with Blobs, feel free to read [the MDN Documentation](https://developer.mozilla.org/en-US/docs/Web/API/Blob). You can also see a simplified example on [this commit](https://github.com/acouderc/toys/commit/c274dd9dde724329d0181d48fa19c026eafe3c97).
 
- Here we see that a first problem arises : to properly send the result (message) of the postMessagified function to ``workerListener``, we need to have a knowledge of that worker. We could add the targetted worker as a parameter of ``postMessagify``, but it goes against our end objective. Instead, we'll use ``this.sendMessage`` and add ``workerListener`` on call. We could also bind the postMessagified function when storing it.
+Using this and ``URL.createObjectURL`` - if you used ``fetch`` already, in the same manner fetched images are inserted -, we can dynamically create our worker.
+
+However, we have a (somewhat) big problem : toString doesn't preserve context (here, closures) ! So ``func`` doesn't refer to anything. As a naive solution, we'll hardcode a ``func`` var and it will work. However, this doesn't really solve the problem and we'll come back to it.
