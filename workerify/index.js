@@ -39,6 +39,18 @@ const handleWorkerMessage = new Proxy(printMessage, {
 
 //------
 
+function testBlob() {
+    const blob = new Blob(
+        ["I'm a blob"],
+        {type:"text/plain"}
+    )
+    const blobReader = new FileReader()
+    blobReader.addEventListener('loadend', () => {
+        $cache.workerListener.postMessage(blobReader.result)
+    })
+    blobReader.readAsText(blob)
+}
+
 //------
 
 function initCache() {
@@ -58,6 +70,7 @@ function initEvents() {
 function init() {
     initCache()
     initEvents()
+    testBlob()
 }
 
 window.onload = init
