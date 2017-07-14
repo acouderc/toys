@@ -8,15 +8,9 @@ function handleSubmit() {
     $cache.worker.postMessage([a, b])
 }
 
-function printMessage(d) {
-    $cache.result.innerHTML = d
+function handleWorkerMessage(e) {
+    $cache.result.innerHTML = e.data
 }
-
-const handleWorkerMessage = new Proxy(printMessage, {
-    apply: function trapCall(target, thisArg, argumentsList) {
-        return target(argumentsList[0].data)
-    }
-})
 
 //------
 
