@@ -2,10 +2,29 @@
 
 let $cache = {}
 
+const add = (d) => {
+    const [a, b] = d.map(Number)
+    return a + b
+}
+
+const mockEvent = (d) => ({data:d})
+
+const postMessagify = (func) => {
+    const baseFunc = function (e) {
+        const res = func(e.data)
+        return this.postMessage(res)
+    }
+
+    return baseFunc
+}
+
+//------
+
+
 function handleSubmit() {
     const a = $cache.a.value;
     const b = $cache.b.value;
-    $cache.worker.postMessage([a, b])
+    $cache.postMessagifiedAdd.call($cache.workerListener, mockEvent([a, b]))
 }
 
 function printMessage(d) {
@@ -13,10 +32,12 @@ function printMessage(d) {
 }
 
 const handleWorkerMessage = new Proxy(printMessage, {
-    apply: function trapCall(target, thisArg, argumentsList) {
+    apply: function trapApply(target, thisArg, argumentsList) {
         return target(argumentsList[0].data)
     }
 })
+
+//------
 
 //------
 
@@ -25,12 +46,14 @@ function initCache() {
     $cache.b = document.getElementById('b')
     $cache.submit = document.getElementById('submit')
     $cache.result = document.getElementById('result')
-    $cache.worker = new Worker("worker.js")
+    $cache.feedbackListener = document.getElementById('worker-listener')
+    $cache.workerListener = new Worker('workerListener.js')
+    $cache.postMessagifiedAdd = postMessagify(add)
 }
 
 function initEvents() {
     $cache.submit.addEventListener('click', handleSubmit)
-    $cache.worker.onmessage = handleWorkerMessage
+    $cache.workerListener.onmessage = handleWorkerMessage
 }
 function init() {
     initCache()
