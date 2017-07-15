@@ -23,15 +23,20 @@ function workerify(func) {
         {type:"text/javascript"}
     )
     const worker = new Worker(URL.createObjectURL(blob))
-    worker.call = function (d) {
-        return new Promise((resolve) => {
-            worker.postMessage(d)
-            worker.onmessage = (e) => {
-                resolve(e.data)
-            }
-        })
-    }
-    return worker
+    const proxy = new Proxy(worker, {
+        getPrototypeOf: () => Function.prototype        
+    })
+    const secondProxy = new Proxy(proxy, {
+        apply: function (t, thisArg, args) {
+            return new Promise((resolve) => {
+                worker.postMessage(args[0])
+                worker.onmessage = (e) => {
+                    resolve(e.data)
+                }
+            })  
+        }
+    })
+    return secondProxy
 }
 
 //------
@@ -40,7 +45,7 @@ function workerify(func) {
 async function handleSubmit() {
     const a = $cache.a.value;
     const b = $cache.b.value;
-    var message = await $cache.worker.call([a, b])
+    var message = await $cache.worker([a, b])
     printMessage(message)
 }
 
@@ -58,6 +63,7 @@ function initCache() {
     $cache.worker = workerify(add)
     $cache.feedbackListener = document.getElementById('worker-listener')
     $cache.workerListener = new Worker('workerListener.js')
+    console.log(Object.getPrototypeOf($cache.worker))
 }
 
 function initEvents() {
