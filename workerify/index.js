@@ -22,7 +22,16 @@ function workerify(func) {
         onmessage = ${PMd.toString()}`],
         {type:"text/javascript"}
     )
-    return new Worker(URL.createObjectURL(blob))
+    const worker = new Worker(URL.createObjectURL(blob))
+    worker.call = function (d) {
+        return new Promise((resolve) => {
+            worker.postMessage(d)
+            worker.onmessage = (e) => {
+                resolve(e.data)
+            }
+        })
+    }
+    return worker
 }
 
 //------
@@ -31,18 +40,13 @@ function workerify(func) {
 function handleSubmit() {
     const a = $cache.a.value;
     const b = $cache.b.value;
-    $cache.worker.postMessage([a, b])
+    $cache.worker.call([a, b])
+        .then(printMessage)
 }
 
 function printMessage(d) {
     $cache.result.innerHTML = d
 }
-
-const handleWorkerMessage = new Proxy(printMessage, {
-    apply: function trapApply(target, thisArg, argumentsList) {
-        return target(argumentsList[0].data)
-    }
-})
 
 //------
 
@@ -58,7 +62,6 @@ function initCache() {
 
 function initEvents() {
     $cache.submit.addEventListener('click', handleSubmit)
-    $cache.worker.onmessage = handleWorkerMessage
     $cache.workerListener.onmessage = (e) => {
         $cache.feedbackListener.innerHTML = $cache.feedbackListener.innerHTML + e.data
     }
