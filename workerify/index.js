@@ -24,15 +24,18 @@ function workerify(func) {
     )
     const worker = new Worker(URL.createObjectURL(blob))
     worker.onmessage = (e) => {
-        worker.resolvePromise(e.data)
+        worker.promiseResolver(e.data)
     }
-    worker.call = function (d) {
-        return new Promise((resolve) => {
-            worker.resolvePromise = resolve
-            worker.postMessage(d)
-        })
-    }
-    return worker
+    const proxy = new Proxy(worker, {
+        getPrototypeOf: () => Function.prototype,
+        apply: function (t, thisArg, args) {
+            return new Promise((resolve) => {
+                worker.promiseResolver = resolve
+                worker.postMessage(args[0])
+            })  
+        }      
+    })
+    return proxy
 }
 //------
 
@@ -40,7 +43,7 @@ function workerify(func) {
 async function handleSubmit() {
     const a = $cache.a.value;
     const b = $cache.b.value;
-    var message = await $cache.worker.call([a, b])
+    var message = await $cache.worker([a, b])
     printMessage(message)
 }
 
