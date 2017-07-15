@@ -37,11 +37,11 @@ function workerify(func) {
 //------
 
 
-function handleSubmit() {
+async function handleSubmit() {
     const a = $cache.a.value;
     const b = $cache.b.value;
-    $cache.worker.call([a, b])
-        .then(printMessage)
+    var message = await $cache.worker.call([a, b])
+    printMessage(message)
 }
 
 function printMessage(d) {
