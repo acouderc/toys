@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>Graph2d or Basic Example</title>
+
+    <style type="text/css">
+      body, html {
+        font-family: sans-serif;
+      }
+    </style>
+
+    <script src="../node_modules/vis/dist/vis.js"></script>
+    <link href="../node_modules/vis/dist/vis.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <div id="visualization"></div>
+
+    <script type="text/javascript">
+      var container = document.getElementById('visualization');
+      const items = [{"x":100,"y":0.00001620620301047209,"group":0},{"x":200,"y":0.00003223452016887354,"group":0},{"x":300,"y":0.00004742599133116612,"group":0},{"x":400,"y":0.00006499161761748629,"group":0},{"x":500,"y":0.00008213675723745869,"group":0},{"x":600,"y":0.00009464323177264499,"group":0},{"x":700,"y":0.00011743961984229416,"group":0},{"x":800,"y":0.00013060532648678203,"group":0},{"x":900,"y":0.00014423913942157707,"group":0},{"x":1000,"y":0.00016086414595670363,"group":0},{"x":100,"y":0.00001621408314983598,"group":1},{"x":200,"y":0.00003240621029088262,"group":1},{"x":300,"y":0.000048598337431929266,"group":1},{"x":400,"y":0.00006479046457297591,"group":1},{"x":500,"y":0.00008098259171402255,"group":1},{"x":600,"y":0.0000971747188550692,"group":1},{"x":700,"y":0.00011336684599611584,"group":1},{"x":800,"y":0.00012955897313716248,"group":1},{"x":900,"y":0.00014575110027820914,"group":1},{"x":1000,"y":0.00016194322741925577,"group":1}];
+      console.log(items)
+      var dataset = new vis.DataSet(items)
+      var options = {    
+        
+      };
+      var Graph2d = new vis.Graph2d(container, dataset, options);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "name": "sampling-discrete-distribution",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "benchmark": "^2.1.3",
+    "jsonfile": "^2.4.0",
+    "mocha": "^3.2.0",
+    "regression": "^1.4.0",
+    "vis": "^4.19.1"
+  }
+}
