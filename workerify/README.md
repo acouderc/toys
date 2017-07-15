@@ -1,6 +1,6 @@
-# Workerify - Step 3
+# Workerify - Step 4
 
-In the third step, we generate a real worker from our function using the File API.
+In the fourth step, we use ``Promise`` and ``async/await`` to have a fully autonomous workerify.
 
 ## Usage
 
@@ -11,12 +11,8 @@ Browsers usually don't allow web pages to load local content (unless you explici
 
 Then open a local page on ``http://localhost:8000/``.
 
-## State at step 3
+## State at step 4
 
-![our generated blob](images/blobworker.png)
+We'll add a method ``call`` to our generated worker to generate a ``Promise``, and directly set the ``onmessage`` method at creation. To avoid recreating a new ``onmessage`` handler for each new promise, we store the resolve function of the promise at the worker level in a new public property.
 
- We'll now use the powerful File API to automatically generate our worker. For this, we'll use ``Function.prototype.toString`` and a ``Blob``. If you're not familiar with Blobs, feel free to read [the MDN Documentation](https://developer.mozilla.org/en-US/docs/Web/API/Blob). You can also see a simplified example on [this commit](https://github.com/acouderc/toys/commit/c274dd9dde724329d0181d48fa19c026eafe3c97).
-
-Using this and ``URL.createObjectURL`` - if you used ``fetch`` already, in the same manner fetched images are inserted -, we can dynamically create our worker.
-
-However, we have a (somewhat) big problem : toString doesn't preserve context (here, closures) ! So ``func`` doesn't refer to anything. As a naive solution, we'll hardcode a ``func`` var and it will work. However, this doesn't really solve the problem and we'll come back to it.
+While this is better, using workerify isn't as simple to use as the original function. Can we improve upon it ?
