@@ -1,13 +1,24 @@
 <!doctype html>
 <head>
     <title>Experiment</title>
+    <style type="text/css">
+        label { padding: 3px }
+    </style>
 </head>
 <body>
-    <input type="text" id="a"/>
-    <input type="text" id="b"/>
-    <button id="submit">Submit</button>
+    <div class="string-form">
+        <label for="string-form__input">Starting string</label>
+        <input type="text" id="string-form__input"/>
+        <button id="string-form__submit">Submit</button>
+    </div>
+    <div class="step-form">
+        <label for="step__select">Add step: </label>
+        <select id="step__select"></select>
+        <button id="step__submit">Add</button>
+    </div>
+    <ul id="steps"></ul>
     <div id="result"></div>
-    <div id="worker-listener"></div>
+    <script src="http://rubaxa.github.io/Sortable/Sortable.js"></script>
     <script src="index.js"></script>
 </body>
 </html>
