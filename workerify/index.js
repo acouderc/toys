@@ -7,11 +7,9 @@ const add = (d) => {
     return a + b
 }
 
-const hey = (d) => `hey ${d}`
-
 const mockEvent = (d) => ({data:d})
 
-const workerify = (func) => {
+const postMessagify = (func) => {
     const baseFunc = function (e) {
         const res = func(e.data)
         return this.postMessage(res)
@@ -26,7 +24,7 @@ const workerify = (func) => {
 function handleSubmit() {
     const a = $cache.a.value;
     const b = $cache.b.value;
-    $cache.worker.postMessage([a, b])
+    $cache.postMessagifiedAdd.call($cache.workerListener, mockEvent([a, b]))
 }
 
 function printMessage(d) {
@@ -50,6 +48,7 @@ function initCache() {
     $cache.result = document.getElementById('result')
     $cache.feedbackListener = document.getElementById('worker-listener')
     $cache.workerListener = new Worker('workerListener.js')
+    $cache.postMessagifiedAdd = postMessagify(add)
 }
 
 function initEvents() {
@@ -59,8 +58,6 @@ function initEvents() {
 function init() {
     initCache()
     initEvents()
-    var workifiedHey = workerify(hey).bind($cache.workerListener)
-    workifiedHey(mockEvent("blob"))
 }
 
 window.onload = init
