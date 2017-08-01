@@ -13,7 +13,7 @@ Then open a local page on ``http://localhost:8000/``.
 
 ## State at step 2
 
-[receiving result from workerListener](images/simpleworker.png)
+![receiving result from workerListener](images/postmessagify.png)
 
  Since we already used a Proxy, this time we use a decorator function to return the postMessage. We created ``mockEvent`` to wrap our input into an object similar to the expected input of a worker. Finally, to test that our postMessagified function effectively sends something, we created a new worker ``workerListener`` that simply returns what it is sent.
 
