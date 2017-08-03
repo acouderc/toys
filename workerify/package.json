@@ -1,0 +1,19 @@
+{
+  "name": "workerify",
+  "version": "1.0.0",
+  "description": "toy project : transform a simple function to a worker",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack"
+  },
+  "keywords": [],
+  "author": "acouderc",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/acouderc/toys/workerify"
+  },
+  "license": "Unlicense",
+  "devDependencies": {
+    "webpack": "^3.4.1"
+  }
+}

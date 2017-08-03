@@ -1,18 +1,22 @@
-# Workerify - Step 6
+# Workerify - Step 7
 
-We replace the string property to a Symbol one, then clean the code a bit.
+workerify is exported as a module, and we use webpack for compatibility.
 
 ## Usage
 
-Browsers usually don't allow web pages to load local content (unless you explicitely check the option), which is why you'll need a local http(s) server to serve content. The simplest way to do it is probably with Python :
+From now on we'll also use Webpack, so you'll need node and npm, and to use :
+- ``npm install``
+- ``npm run build``
+
+You'll also need a local http(s) server to serve content. The simplest way to do it is probably with Python :
 - open a bash in the git directory
 - Python 3 : ``python -m http.server``
 - Python 2 : ``python -m SimpleHTTPServer``
 
-Then open a local page on ``http://localhost:8000/``.
+Then open a local page on ``http://localhost:8000/dist/``.
 
-## State at step 6
+## State at step 7
 
-The Symbols were introduced in ES6 to avoid name clashes between properties ([more details here](https://stackoverflow.com/questions/21724326/why-bring-symbols-to-javascript)). Since we (somewhat artificially) added the ``promiseResolver`` property to our worker object, it gives us a good opportunity to try them. You can see the resulting code [here](https://github.com/acouderc/toys/commit/77ee25dadcce5dc094e7730853931fdba3de673d).
+Finally, our naive implementation is done, so we'll isolate it in a separate file as a module ([see MDN doc](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import)).
 
-However, as it isn't really justified to use ``promiseResolver`` as an object property instead of a variable, we'll remove that part afterwards.
+This functionality is currently behind a flag on Chrome so we'll use the Webpack bundler to make it work and slightly modify the project structure.
