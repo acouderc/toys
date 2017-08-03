@@ -1,6 +1,6 @@
 # Workerify - Step 5
 
-We test a limit of Proxies in the step 5, and change the return type of workerify.
+We test a "limit" of Proxies in the step 5, and change the return type of workerify.
 
 ## Usage
 
