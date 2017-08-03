@@ -26,16 +26,12 @@ function workerify(func) {
     worker.onmessage = (e) => {
         worker.promiseResolver(e.data)
     }
-    const proxy = new Proxy(worker, {
-        getPrototypeOf: () => Function.prototype,
-        apply: function (t, thisArg, args) {
-            return new Promise((resolve) => {
-                worker.promiseResolver = resolve
-                worker.postMessage(args[0])
-            })  
-        }      
-    })
-    return proxy
+    return function workerified() {
+        return new Promise((resolve) => {
+            worker.promiseResolver = resolve
+            worker.postMessage(...arguments)
+        })
+    }
 }
 //------
 

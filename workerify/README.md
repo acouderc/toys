@@ -1,6 +1,6 @@
-# Workerify - Step 4
+# Workerify - Step 5
 
-In the fourth step, we use ``Promise`` and ``async/await`` to have a fully autonomous workerify.
+We test a limit of Proxies in the step 5, and change the return type of workerify.
 
 ## Usage
 
@@ -11,8 +11,12 @@ Browsers usually don't allow web pages to load local content (unless you explici
 
 Then open a local page on ``http://localhost:8000/``.
 
-## State at step 4
+## State at step 5
 
-We'll add a method ``call`` to our generated worker to generate a ``Promise``, and directly set the ``onmessage`` method at creation. To avoid recreating a new ``onmessage`` handler for each new promise, we store the resolve function of the promise at the worker level in a new public property.
+Since we want to be able to use our workerified function like a function, we tried using Proxy to return a proxified worker, who's prototype would be a function and apply would be caught to execute the "call". However, it doesn't work :
 
-While this is better, using workerify isn't as simple to use as the original function. Can we improve upon it ?
+![A function prototype Proxy can't be called](images/functionprototype.png)
+
+Indeed, it seems what "makes" a function is it's internal method ``[[Call]]`` ([see spec](http://www.ecma-international.org/ecma-262/6.0/#sec-ecmascript-function-objects-call-thisargument-argumentslist)), and not the prototype. Since the method is internal, this differs from Python where we would be able to define a class with the ``__call__`` property.
+
+To solve our problem, we'll simply return a function instead of the worker.
