@@ -4,8 +4,8 @@ import workerify from './workerify'
 
 let $cache = {}
 
-const add = (d) => {
-    const [a, b] = d.map(Number)
+const add = (a, b) => {
+    [a, b] = [a, b].map(Number)
     return a + b
 }
 
@@ -14,7 +14,7 @@ const add = (d) => {
 async function handleSubmit() {
     const a = $cache.a.value;
     const b = $cache.b.value;
-    var message = await $cache.worker([a, b])
+    var message = await $cache.worker(a, b)
     printMessage(message)
 }
 

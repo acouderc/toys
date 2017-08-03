@@ -73,10 +73,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
+
 let $cache = {}
 
-const add = (d) => {
-    const [a, b] = d.map(Number)
+const add = (a, b) => {
+    [a, b] = [a, b].map(Number)
     return a + b
 }
 
@@ -85,7 +86,7 @@ const add = (d) => {
 async function handleSubmit() {
     const a = $cache.a.value;
     const b = $cache.b.value;
-    var message = await $cache.worker([a, b])
+    var message = await $cache.worker(a, b)
     printMessage(message)
 }
 
@@ -124,7 +125,7 @@ window.onload = init
 
 function postMessagify(func) {
     const baseFunc = function (e) {
-        const res = func(e.data)
+        const res = func.apply(null, e.data)
         return this.postMessage(res)
     }
     return baseFunc
@@ -145,7 +146,7 @@ function workerify(func) {
     return function workerified() {
         return new Promise((resolve) => {
             promiseResolver = resolve
-            worker.postMessage(...arguments)
+            worker.postMessage(Array.from(arguments))
         })
     }
 }

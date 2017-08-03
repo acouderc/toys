@@ -2,7 +2,7 @@
 
 function postMessagify(func) {
     const baseFunc = function (e) {
-        const res = func(e.data)
+        const res = func.apply(null, e.data)
         return this.postMessage(res)
     }
     return baseFunc
@@ -23,7 +23,7 @@ export default function workerify(func) {
     return function workerified() {
         return new Promise((resolve) => {
             promiseResolver = resolve
-            worker.postMessage(...arguments)
+            worker.postMessage(Array.from(arguments))
         })
     }
 }
