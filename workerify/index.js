@@ -23,13 +23,13 @@ function workerify(func) {
         {type:"text/javascript"}
     )
     const worker = new Worker(URL.createObjectURL(blob))
-    const promiseResolver = Symbol()
+    let promiseResolver = null
     worker.onmessage = (e) => {
-        worker[promiseResolver](e.data)
+        promiseResolver(e.data)
     }
     return function workerified() {
         return new Promise((resolve) => {
-            worker[promiseResolver] = resolve
+            promiseResolver = resolve
             worker.postMessage(...arguments)
         })
     }
