@@ -13,7 +13,7 @@ Then open a local page on ``http://localhost:8000/``.
 
 ## State at step 5
 
-Since we want to be able to use our workerified function like a function, we tried using Proxy to return a proxified worker, who's prototype would be a function and apply would be caught to execute the "call". However, it doesn't work :
+Since we want to be able to use our workerified function like a function, we tried using Proxy to return a proxified worker, who's prototype would be a function and apply would be caught to execute the "call" ([checkout the commit](https://github.com/acouderc/toys/commit/dcf5a445c0b97fec510c09af8c79a4faa3c1992c)). However, it doesn't work :
 
 ![A function prototype Proxy can't be called](images/functionprototype.png)
 
