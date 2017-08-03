@@ -1,6 +1,6 @@
 # Workerify - Step 6
 
-We replace the string property to a Symbol one, then clean the code a bit.
+We replace the string property to a Symbol one, then go back and clean the code a bit.
 
 ## Usage
 
