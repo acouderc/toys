@@ -15,5 +15,8 @@
   "license": "Unlicense",
   "devDependencies": {
     "webpack": "^3.4.1"
+  },
+  "dependencies": {
+    "acorn": "^5.1.1"
   }
 }
