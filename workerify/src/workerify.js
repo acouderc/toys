@@ -1,8 +1,8 @@
 'use strict'
 
 function postMessagify(func) {
-    const baseFunc = function (e) {
-        const res = func.apply(null, e.data)
+    const baseFunc = async function (e) {
+        const res = await func.apply(null, e.data)
         return this.postMessage(res)
     }
     return baseFunc

@@ -6,7 +6,7 @@ let $cache = {}
 
 const add = (a, b) => {
     [a, b] = [a, b].map(Number)
-    return a + b
+    return new Promise((r) => setTimeout(() => r(a + b), 1000))
 }
 
 //------
