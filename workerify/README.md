@@ -3,17 +3,17 @@
 There is a wealth of documentation on every ES6 feature, so young developers only need some toys projects to get hands-on experience on the rarer features. ``workerify`` is one such project, organized into steps to detail difficulties encountered for the reader. 
 
 ``workerify`` is a higher-order function transforming functions following certain constraints into another function transmitting its call to a web worker and returning a Promise of the result. To do so, ``workerify`` applies the following constraints to its function parameter :
-- it is pure,
-- its arity is one [?],
-- it is synchronous [?].
+- it only uses elements of its own scope (this is stricter than pure),
+- its arity is one,
+- it is synchronous.
 
-While the last two parameters [TODO] 
+We'll gradually try to remove the constraints as we progress.
 
 ## Usage
 
 Checkout on each step : ``steps/#`` where `#` is the step number then look at the code and the readme, or read along.
 
-## Step 1 : Setting up an example
+## [Step 1](https://github.com/acouderc/toys/tree/steps/1) : Setting up an example
 
 This commit creates our first example and displays a working web worker.
 
@@ -25,7 +25,7 @@ Our index.html consists of 2 inputs and a submit button, the submit handler call
 
 We can see how a simple worker works, as well as a Proxy. For the Proxy case, an higher-order function would have worked just as well (or a modification of the base functions).
 
-## Step 2 : postMessagify
+## [Step 2](https://github.com/acouderc/toys/tree/steps/2) : postMessagify
 
 We're now working on transforming any simple function to one sending its result via ``postMessage``, using an higher-order function.
 
@@ -39,7 +39,7 @@ Since we already used a Proxy, this time we use a decorator function to return t
 
  Instead, we'll use ``this.sendMessage`` and add ``workerListener`` on call. We could also bind the postMessagified function when storing it.
 
- ## Step 3 : Generation of a JS file
+## [Step 3](https://github.com/acouderc/toys/tree/steps/3) : Generation of a JS file
 
 We generate a real worker from our function using the File API.
 
@@ -53,7 +53,7 @@ Using this and ``URL.createObjectURL`` - if you used ``fetch`` already, in the s
 
 However, we have a (somewhat) big problem : toString doesn't preserve context (here, closures) ! So ``func`` doesn't refer to anything. As a naive solution, we'll hardcode a ``func`` var and it will work. However, this doesn't really solve the problem and we'll come back to it.
 
-## Step 4: Integrating event handlers with Promises
+## [Step 4](https://github.com/acouderc/toys/tree/steps/4) : Integrating event handlers with Promises
 
 We use ``Promise`` and ``async/await`` to have a fully autonomous workerify.
 
@@ -63,7 +63,7 @@ We'll add a method ``call`` to our generated worker to generate a ``Promise``, a
 
 While this is better, using workerify isn't as simple to use as the original function. Can we improve upon it ?
 
-## Step 5: Considerations on function, changing the return type
+## [Step 5](https://github.com/acouderc/toys/tree/steps/5) : Considerations on function, changing the return type
 
 We test a "limit" of Proxies in the step 5, and change the return type of workerify.
 
@@ -79,7 +79,7 @@ Indeed, it seems what "makes" a function is its internal method ``[[Call]]`` ([s
 
 To solve our problem, we simply return a function instead of the worker.
 
-## Step 6 : Experiment with a Symbol
+## [Step 6](https://github.com/acouderc/toys/tree/steps/6) : Experiment with a Symbol
 
 We replace the string property to a Symbol one, then go back and clean the code a bit.
 
@@ -89,7 +89,7 @@ The Symbols were introduced in ES6 to avoid name clashes between properties ([mo
 
 However, as it isn't really justified to use ``promiseResolver`` as an object property instead of a variable, we remove that part altogether.
 
-## Step 7: Turning workerify to an ES6 module
+## [Step 7](https://github.com/acouderc/toys/tree/steps/7) : Turning workerify to an ES6 module
 
 workerify is exported as a module, and we use webpack for compatibility.
 
