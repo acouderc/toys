@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -68,8 +68,53 @@
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = workerify;
+
+
+function postMessagify(func) {
+    const baseFunc = async function (e) {
+        const res = await func.apply(null, e.data)
+        return this.postMessage(res)
+    }
+    return baseFunc
+}
+
+function workerify(func) {
+    const PMd = postMessagify(func)
+    const blob = new Blob(
+        [`const func = ${func.toString()}
+        onmessage = ${PMd.toString()}`],
+        {type:"text/javascript"}
+    )
+    const worker = new Worker(URL.createObjectURL(blob))
+    let promiseResolver = null
+    worker.onmessage = (e) => {
+        promiseResolver(e.data)
+    }
+    return function workerified() {
+        return new Promise((resolve) => {
+            promiseResolver = resolve
+            worker.postMessage(Array.from(arguments))
+        })
+    }
+}
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(2);
+__webpack_require__(3);
+(function webpackMissingModule() { throw new Error("Cannot find module \"test/bundle.js\""); }());
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__workerify__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__workerify__ = __webpack_require__(0);
 
 
 
@@ -116,40 +161,30 @@ function init() {
 window.onload = init
 
 /***/ }),
-/* 1 */
+/* 3 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = workerify;
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__src_workerify__ = __webpack_require__(0);
+/* eslint-env mocha */
 
 
-function postMessagify(func) {
-    const baseFunc = async function (e) {
-        const res = await func.apply(null, e.data)
-        return this.postMessage(res)
-    }
-    return baseFunc
-}
+const assert = __webpack_require__(4)
 
-function workerify(func) {
-    const PMd = postMessagify(func)
-    const blob = new Blob(
-        [`const func = ${func.toString()}
-        onmessage = ${PMd.toString()}`],
-        {type:"text/javascript"}
-    )
-    const worker = new Worker(URL.createObjectURL(blob))
-    let promiseResolver = null
-    worker.onmessage = (e) => {
-        promiseResolver(e.data)
-    }
-    return function workerified() {
-        return new Promise((resolve) => {
-            promiseResolver = resolve
-            worker.postMessage(Array.from(arguments))
-        })
-    }
-}
+
+it('should handle the simplest case', async function () {
+    const add = ([a, b]) => a + b
+    const wAdd = Object(__WEBPACK_IMPORTED_MODULE_0__src_workerify__["a" /* default */])(add)
+    const res = await wAdd([5, 7])
+    assert.equal(12, res)
+})
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports) {
+
+module.exports = require("assert");
 
 /***/ })
 /******/ ]);
