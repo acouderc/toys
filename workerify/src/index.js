@@ -1,5 +1,7 @@
 'use strict'
 
+import workerify from './workerify'
+
 const operations = {
     concat: {func: (a, b) => a + b, labels:['String to add']},
     prepend: {func: (a, b) => b + a, labels:['String to append']},
